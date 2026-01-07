@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piacere, io sono Enrico La Noce</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #111111;
+            --primary: #00ff88;
+            --primary-glow: rgba(0, 255, 136, 0.2);
+            --secondary: #ff0080;
+            --accent: #00d4ff;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: #222222;
+            --border-bright: #333333;
+        }
+
+        body {
+            font-family: 'Sora', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom-color: var(--primary);
+            box-shadow: 0 0 30px var(--primary-glow);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
+                var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, transparent 0%, rgba(0, 255, 136, 0.03) 50%, transparent 100%);
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            margin-bottom: 3rem;
+            font-weight: 400;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg-dark);
+            box-shadow: 0 0 30px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px var(--primary-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--border-bright);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Section */
+        section {
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid var(--border-bright);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--border-bright);
+            transform: translateY(-4px);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Formatted Text */
+        .formatted-text {
+            font-size: 1.05rem;
+            line-height: 1.9;
+        }
+
+        .formatted-text h1,
+        .formatted-text h2,
+        .formatted-text h3 {
+            font-weight: 600;
+            margin: 2.5rem 0 1.25rem;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .formatted-text h1 { font-size: 2.25rem; }
+        .formatted-text h2 { font-size: 1.75rem; }
+        .formatted-text h3 { font-size: 1.35rem; }
+
+        .formatted-text p {
+            margin-bottom: 1.5rem;
+            color: var(--text-dim);
+        }
+
+        .formatted-text strong {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .formatted-text em {
+            font-style: italic;
+            color: var(--primary);
+        }
+
+        .formatted-text ul {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .formatted-text li {
+            margin-bottom: 0.75rem;
+            color: var(--text-dim);
+            position: relative;
+            padding-left: 0.5rem;
+        }
+
+        .formatted-text li::marker {
+            color: var(--primary);
+        }
+
+        /* Parcours */
+        .parcours-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .parcours-photo-container {
+            position: sticky;
+            top: 120px;
+            max-width: 280px;
+        }
+
+        .parcours-main-photo {
+            width: 100%;
+            max-height: 400px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .photo-hint {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .photo-hint::before {
+            content: '💡 ';
+        }
+
+        /* Download Button */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        .download-btn:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+            transform: translateY(-2px);
+        }
+
+        .download-btn::before {
+            content: '⬇';
+            font-size: 1.2rem;
+        }
+
+        .vcard-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 12px;
+            color: var(--bg-dark);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .vcard-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.5);
+        }
+
+        .vcard-btn::before {
+            content: '📱';
+            font-size: 1.5rem;
+        }
+
+        /* Pillars */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .pillar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .pillar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top, var(--primary-glow), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .pillar:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+        }
+
+        .pillar:hover::before {
+            opacity: 1;
+        }
+
+        .pillar-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pillar h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pillar p {
+            font-size: 1rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Presentations */
+        .presentation-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2.5rem;
+            transition: all 0.3s;
+        }
+
+        .presentation-card:hover {
+            border-color: var(--border-bright);
+        }
+
+        .presentation-header {
+            padding: 1.75rem 2rem;
+            background: rgba(0, 255, 136, 0.03);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .presentation-header h3 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .presentation-card iframe {
+            width: 100%;
+            height: 550px;
+            border: none;
+        }
+
+        /* Documents */
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .doc-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doc-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-glow), transparent);
+            transform: translate(-50%, -50%);
+            transition: all 0.5s;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--primary);
+        }
+
+        .doc-card:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .doc-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            filter: grayscale(1);
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .doc-card:hover .doc-icon {
+            filter: grayscale(0);
+            transform: scale(1.1);
+        }
+
+        .doc-card h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .doc-card p {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Contact */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: 4rem;
+        }
+
+        .contact-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .contact-card a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.05rem;
+            transition: all 0.2s;
+        }
+
+        .contact-card a:hover {
+            color: var(--accent);
+        }
+
+        /* Loading */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Photo Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+            transform: rotate(90deg);
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-nav:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        .modal-nav.prev { left: -70px; }
+        .modal-nav.next { right: -70px; }
+
+        /* Video Player */
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 3rem auto;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-container video,
+        .video-container iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+            display: block;
+        }
+
+        .video-label {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem 2rem;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            display: inline-block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 700px;
+            margin: 4rem auto 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+        }
+
+        .contact-form h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .contact-form p {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Sora', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-dark);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--primary-glow);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-success {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--primary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            color: var(--primary);
+            margin-top: 1rem;
+        }
+
+        .form-error {
+            background: rgba(255, 0, 128, 0.1);
+            border: 1px solid var(--secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            color: var(--secondary);
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 3.5rem; }
+            .section-title { font-size: 2.5rem; }
+            .parcours-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .parcours-photo-container { position: relative; top: 0; }
+            .pillars { grid-template-columns: repeat(2, 1fr); }
+            .nav-links { display: none; }
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 2.5rem; }
+            .pillars { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .photo-gallery { grid-template-columns: 1fr; }
+            section { padding: 4rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRybL4yk5OAE_sOrGqik2bIS1v4skSFNUlK8KCAICAZi6kG3mB3DKrOFmAxvZJNvkB/exec';
+        
+        // FONCE PDF Presentations
+        // Presentations and video will be loaded from Google Sheet
+        // No hardcoded data here anymore!
+
+        const formatText = (text) => {
+            if (!text) return '';
+            
+            // Replace markdown bold/italic FIRST
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            
+            // Split by double newlines to get paragraphs
+            const blocks = text.split('\n\n');
+            
+            const formatted = blocks.map(block => {
+                const lines = block.split('\n');
+                const firstLine = lines[0].trim();
+                
+                if (firstLine.startsWith('### ')) {
+                    return `<h3>${firstLine.substring(4)}</h3>`;
+                }
+                if (firstLine.startsWith('## ')) {
+                    return `<h2>${firstLine.substring(3)}</h2>`;
+                }
+                if (firstLine.startsWith('# ')) {
+                    return `<h1>${firstLine.substring(2)}</h1>`;
+                }
+                
+                // Check if it's a list
+                if (firstLine.startsWith('→ ') || firstLine.startsWith('• ')) {
+                    const items = lines
+                        .filter(l => l.startsWith('→ ') || l.startsWith('• '))
+                        .map(l => `<li>${l.substring(2)}</li>`)
+                        .join('');
+                    return `<ul>${items}</ul>`;
+                }
+                
+                // Empty block
+                if (block.trim() === '') {
+                    return '<br/>';
+                }
+                
+                // Regular paragraph - join lines with space
+                return `<p>${lines.join(' ')}</p>`;
+            }).join('');
+            
+            return formatted;
+        };
+
+        const FormattedContent = ({ content }) => {
+            return (
+                <div 
+                    className="formatted-text" 
+                    dangerouslySetInnerHTML={{ __html: formatText(content) }}
+                />
+            );
+        };
+
+        const ContentCard = ({ title, content, icon }) => {
+            const [data, setData] = useState('');
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                loadData();
+            }, [content]);
+
+            const loadData = async () => {
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?action=getSection&section=${content}`);
+                    const result = await response.json();
+                    if (result.success) {
+                        setData(result.content);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+                setLoading(false);
+            };
+
+            if (loading) return <div className="card">Chargement...</div>;
+
+            return (
+                <div className="card">
+                    <h3 className="card-title">
+                        <span>{icon}</span>
+                        {title}
+                    </h3>
+                    <FormattedContent content={data} />
+                </div>
+            );
+        };
+
+        const ContactForm = () => {
+            const [formData, setFormData] = useState({
+                name: '',
+                contact: '',
+                message: '',
+                type: 'contact'
+            });
+            const [submitting, setSubmitting] = useState(false);
+            const [status, setStatus] = useState(null);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setSubmitting(true);
+                setStatus(null);
+
+                try {
+                    // Create hidden iframe for form submission (bypasses CORS)
+                    const iframe = document.createElement('iframe');
+                    iframe.name = 'hidden_iframe';
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+
+                    // Create form
+                    const form = document.createElement('form');
+                    form.target = 'hidden_iframe';
+                    form.method = 'POST';
+                    form.action = SCRIPT_URL;
+
+                    // Add fields
+                    const fields = {
+                        name: formData.name,
+                        contact: formData.contact,
+                        message: formData.message,
+                        type: formData.type
+                    };
+
+                    Object.keys(fields).forEach(key => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = fields[key];
+                        form.appendChild(input);
+                    });
+
+                    document.body.appendChild(form);
+                    
+                    // Submit and cleanup
+                    form.submit();
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(form);
+                        document.body.removeChild(iframe);
+                    }, 1000);
+
+                    // Show success
+                    setStatus({ type: 'success', message: 'Merci! Votre message a été enregistré.' });
+                    setFormData({ name: '', contact: '', message: '', type: 'contact' });
+                    
+                } catch (error) {
+                    console.error('Submit error:', error);
+                    setStatus({ type: 'error', message: 'Erreur. Réessayez plus tard.' });
+                }
+
+                setSubmitting(false);
+            };
+
+            return (
+                <form className="contact-form" onSubmit={handleSubmit}>
+                    <h3>Laissez-moi un message</h3>
+                    <p>Un conseil, une opportunité, un contact utile ? Partagez avec moi !</p>
+
+                    <div className="form-group">
+                        <label>Votre nom *</label>
+                        <input
+                            type="text"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData({...formData, name: e.target.value})}
+                            placeholder="Votre nom"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Email ou Téléphone *</label>
+                        <input
+                            type="text"
+                            required
+                            value={formData.contact}
+                            onChange={(e) => setFormData({...formData, contact: e.target.value})}
+                            placeholder="contact@email.com ou +41..."
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Votre message *</label>
+                        <textarea
+                            required
+                            value={formData.message}
+                            onChange={(e) => setFormData({...formData, message: e.target.value})}
+                            placeholder="Conseil, opportunité, contact, idée..."
+                        />
+                    </div>
+
+                    <button type="submit" className="form-submit" disabled={submitting}>
+                        {submitting ? 'Envoi en cours...' : 'Envoyer le message'}
+                    </button>
+
+                    {status && (
+                        <div className={`form-${status.type}`}>
+                            {status.message}
+                        </div>
+                    )}
+                </form>
+            );
+        };
+
+        const App = () => {
+            const [scrolled, setScrolled] = useState(false);
+            const [data, setData] = useState({});
+            const [modalOpen, setModalOpen] = useState(false);
+            const [currentPhoto, setCurrentPhoto] = useState('');
+            const [allPhotos, setAllPhotos] = useState([]);
+            const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+            const [presentations, setPresentations] = useState([]);
+            
+            // Video is local file
+            const VIDEO_URL = './pdf/video.mp4';
+
+            useEffect(() => {
+                setTimeout(() => document.getElementById('loader').classList.add('hidden'), 500);
+                
+                window.addEventListener('scroll', () => setScrolled(window.scrollY > 50));
+                loadAllData();
+
+                // Close modal on ESC
+                const handleEsc = (e) => {
+                    if (e.key === 'Escape') setModalOpen(false);
+                };
+                window.addEventListener('keydown', handleEsc);
+                return () => window.removeEventListener('keydown', handleEsc);
+            }, []);
+
+            const loadAllData = async () => {
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?action=getAllData`);
+                    const result = await response.json();
+                    if (result.success) {
+                        setData(result.data);
+                        
+                        // Only main photo
+                        const photos = ['./pdf/principale.jpeg'];
+                        setAllPhotos(photos);
+                        console.log('📷 Photo principale chargée');
+                        
+                        // Load presentations from Google Sheet
+                        const pres = [];
+                        for (let i = 1; i <= 5; i++) {
+                            const key = `pdf_fonce_${i}`;
+                            if (result.data[key] && !result.data[key].includes('INSERISCI')) {
+                                const parts = result.data[key].split('|');
+                                if (parts.length >= 3) {
+                                    pres.push({
+                                        title: parts[0].trim(),
+                                        file: parts[1].trim(),
+                                        description: parts[2].trim()
+                                    });
+                                }
+                            }
+                        }
+                        setPresentations(pres);
+                        console.log('📄 PDF FONCE caricati:', pres.length);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            };
+
+            const scroll = (id) => {
+                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            const openDoc = (filename) => {
+                window.open(`./pdf/${filename}`, '_blank');
+            };
+
+            const downloadDoc = (filename) => {
+                const link = document.createElement('a');
+                link.href = `./pdf/${filename}`;
+                link.download = filename;
+                link.click();
+            };
+
+            const openPersonalDoc = (url, name) => {
+                if (url && url !== '#' && !url.includes('INSERISCI')) {
+                    window.open(url, '_blank');
+                } else {
+                    alert(`Ajoute le lien pour ${name} dans le Google Sheet!`);
+                }
+            };
+
+            const downloadPersonalDoc = (url, name) => {
+                if (url && url !== '#' && !url.includes('INSERISCI')) {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = name;
+                    link.click();
+                } else {
+                    alert(`Ajoute le lien pour ${name} dans le Google Sheet!`);
+                }
+            };
+
+            // Generate and download VCard
+            const downloadVCard = () => {
+                const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:Enrico La Noce
+N:La Noce;Enrico;;;
+EMAIL;TYPE=INTERNET:lanoce.enrico@gmail.com
+TEL;TYPE=CELL:+41786583760
+TITLE:Créateur de FONCE
+ORG:FONCE
+ADR;TYPE=WORK:;;Genève;;;Suisse
+URL:https://github.com/enricoolanoce
+NOTE:Créateur de FONCE - Programme d'insertion socio-professionnelle pour la jeunesse genevoise
+END:VCARD`;
+                
+                const blob = new Blob([vcard], { type: 'text/vcard' });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'Enrico_La_Noce.vcf';
+                link.click();
+                window.URL.revokeObjectURL(url);
+            };
+
+            // Parse extra documents from sheet
+            const parseExtraDocs = () => {
+                const extras = [];
+                for (let i = 1; i <= 5; i++) {
+                    const docData = data[`doc_extra_${i}`];
+                    if (docData && docData.trim() && !docData.includes('INSERISCI')) {
+                        const parts = docData.split('|');
+                        if (parts.length === 4) {
+                            extras.push({
+                                url: parts[0].trim(),
+                                title: parts[1].trim(),
+                                description: parts[2].trim(),
+                                icon: parts[3].trim()
+                            });
+                        }
+                    }
+                }
+                return extras;
+            };
+
+            const openPhotoModal = (photoUrl) => {
+                const index = allPhotos.indexOf(photoUrl);
+                setCurrentPhotoIndex(index);
+                setCurrentPhoto(photoUrl);
+                setModalOpen(true);
+            };
+
+            const nextPhoto = () => {
+                const newIndex = (currentPhotoIndex + 1) % allPhotos.length;
+                setCurrentPhotoIndex(newIndex);
+                setCurrentPhoto(allPhotos[newIndex]);
+            };
+
+            const prevPhoto = () => {
+                const newIndex = (currentPhotoIndex - 1 + allPhotos.length) % allPhotos.length;
+                setCurrentPhotoIndex(newIndex);
+                setCurrentPhoto(allPhotos[newIndex]);
+            };
+
+            return (
+                <>
+                    <nav className={scrolled ? 'scrolled' : ''}>
+                        <div className="nav-content">
+                            <a href="#" className="logo">
+                                <span>&lt;</span>Enrico<span>/&gt;</span>
+                            </a>
+                            <ul className="nav-links">
+                                <li><a href="#" className="nav-link" onClick={() => scroll('about')}>À propos</a></li>
+                                <li><a href="#" className="nav-link" onClick={() => scroll('parcours')}>Parcours</a></li>
+                                <li><a href="#" className="nav-link" onClick={() => scroll('fonce')}>FONCE</a></li>
+                                <li><a href="#" className="nav-link" onClick={() => scroll('presentations')}>Présentations</a></li>
+                                <li><a href="#" className="nav-link" onClick={() => scroll('documents')}>Documents</a></li>
+                                <li><a href="#" className="nav-link" onClick={() => scroll('contact')}>Contact</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+
+                    <div className="hero">
+                        <div className="hero-content container">
+                            <div className="hero-label">PORTFOLIO</div>
+                            <h1>
+                                Piacere,<br/>
+                                io sono <span className="highlight">Enrico La Noce</span>
+                            </h1>
+                            <p className="hero-subtitle">
+                                Créateur de FONCE — Un tremplin d'insertion socio-professionnelle 
+                                pour la jeunesse genevoise, alliant IA, cuisine, coaching et créativité.
+                            </p>
+                            <div className="cta-buttons">
+                                <button className="btn btn-primary" onClick={() => scroll('fonce')}>
+                                    Découvrir FONCE
+                                </button>
+                                <button className="btn btn-secondary" onClick={() => scroll('parcours')}>
+                                    Mon parcours
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <section id="about">
+                        <div className="container">
+                            <div className="section-header">
+                                <div className="section-label">01 — INTRODUCTION</div>
+                                <h2 className="section-title">Qui suis-je ?</h2>
+                            </div>
+                            <ContentCard title="Mon histoire" content="bio" icon="📖" />
+                            <ContentCard title="Mes passions" content="passions" icon="❤️" />
+                            <ContentCard title="Mon expérience" content="experience" icon="💼" />
+                            <ContentCard title="Compétences Tech" content="tech_skills" icon="💻" />
+                        </div>
+                    </section>
+
+                    <section id="parcours">
+                        <div className="container">
+                            <div className="section-header">
+                                <div className="section-label">02 — PARCOURS</div>
+                                <h2 className="section-title">Mon Chemin</h2>
+                                <p className="section-subtitle">
+                                    Le parcours qui m'a conduit à créer FONCE
+                                </p>
+                            </div>
+                            
+                            <div className="parcours-grid">
+                                <div className="parcours-photo-container">
+                                    <img 
+                                        src="./pdf/principale.jpeg" 
+                                        alt="Enrico La Noce"
+                                        className="parcours-main-photo"
+                                        onClick={() => openPhotoModal('./pdf/principale.jpeg')}
+                                        style={{cursor: 'zoom-in'}}
+                                        onError={(e) => {
+                                            console.error('❌ Foto principale non trovata');
+                                            e.target.src = 'https://via.placeholder.com/280x400/111111/00ff88?text=Enrico';
+                                        }}
+                                    />
+                                    <div className="photo-hint">
+                                        Clique pour agrandir
+                                    </div>
+                                </div>
+                                
+                                <div className="card">
+                                    <FormattedContent content={data.parcours || 'Chargement...'} />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="fonce">
+                        <div className="container">
+                            <div className="section-header">
+                                <div className="section-label">03 — PROJET</div>
+                                <h2 className="section-title">FONCE</h2>
+                                <p className="section-subtitle">
+                                    Formation • Organisation • Navigation • Créativité • Élan
+                                </p>
+                            </div>
+                            
+                            <div className="pillars">
+                                <div className="pillar" onClick={() => scroll('video')}>
+                                    <div className="pillar-icon">🧠</div>
+                                    <h3>Intelligence Artificielle</h3>
+                                    <p>Maîtriser les outils du futur pour l'égalité des chances</p>
+                                </div>
+                                <div className="pillar" onClick={() => scroll('video')}>
+                                    <div className="pillar-icon">🍳</div>
+                                    <h3>Cuisine Collective</h3>
+                                    <p>Apprendre par la pratique et le faire ensemble</p>
+                                </div>
+                                <div className="pillar" onClick={() => scroll('video')}>
+                                    <div className="pillar-icon">❤️</div>
+                                    <h3>Coaching Personnel</h3>
+                                    <p>Accompagnement sur mesure et développement</p>
+                                </div>
+                                <div className="pillar" onClick={() => scroll('video')}>
+                                    <div className="pillar-icon">🎭</div>
+                                    <h3>Expression Artistique</h3>
+                                    <p>Libérer sa créativité par le théâtre et la musique</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="video" style={{background: 'var(--bg-dark)'}}>
+                        <div className="container">
+                            <div className="section-header">
+                                <div className="section-label">03.5 — VIDÉO</div>
+                                <h2 className="section-title">FONCE en vidéo</h2>
+                                <p className="section-subtitle">
+                                    L'intégration jeune - Découvrez le projet en images
+                                </p>
+                            </div>
+                            
+                            <div className="video-container">
+                                <video controls autoPlay muted loop playsInline>
+                                    <source src="./pdf/FONCE___L_intégration_jeune.mp4" type="video/mp4" />
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="presentations">
+                        <div className="container">
+                            <div className="section-header">
+                                <div className="section-label">04 — PRÉSENTATIONS</div>
+                                <h2 className="section-title">Découvrir FONCE</h2>
+                                <p className="section-subtitle">
+                                    Explorez et téléchargez nos documents de présentation
+                                </p>
+                            </div>
+                            
+                            {presentations.length > 0 ? (
+                                <div className="docs-grid">
+                                    {presentations.map((pres, index) => (
+                                        <div key={index} className="doc-card">
+                                            <div className="doc-icon">{pres.title.split(' ')[0]}</div>
+                                            <h4>{pres.title.substring(pres.title.indexOf(' ') + 1)}</h4>
+                                            <p>{pres.description}</p>
+                                            <button className="download-btn" onClick={() => window.open(pres.file, '_blank')}>
+                                                Télécharger
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div style={{
+                                    textAlign: 'center',
+                                    padding: '3rem',
+                                    background: 'rgba(0, 255, 136, 0.05)',
+                                    border: '1px solid var(--primary)',
+                                    borderRadius: '12px',
+                                    maxWidth: '600px',
+                                    margin: '0 auto'
+                                }}>
+                                    <p style={{fontSize: '1.2rem', marginBottom: '1rem'}}>📄 Documents en cours de chargement...</p>
+                                    <p style={{fontSize: '0.9rem', color: 'var(--text-dim)'}}>
+                                        Les présentations FONCE seront disponibles une fois le Google Sheet configuré.
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </section>
+
+                    <section id="documents">
+                        <div className="container">
+                            <div className="section-header">
+                                <div className="section-label">05 — DOCUMENTS</div>
+                                <h2 className="section-title">Documents Personnels</h2>
+                                <p className="section-subtitle">
+                                    CV, lettre de motivation et documents complémentaires
+                                </p>
+                            </div>
+                            
+                            <div className="docs-grid">
+                                <div className="doc-card">
+                                    <div className="doc-icon">📄</div>
+                                    <h4>Curriculum Vitae</h4>
+                                    <p>Parcours professionnel complet</p>
+                                    <button className="download-btn" onClick={() => downloadPersonalDoc(data.pdf_cv, 'CV_Enrico_La_Noce.pdf')}>
+                                        Télécharger
+                                    </button>
+                                </div>
+                                <div className="doc-card">
+                                    <div className="doc-icon">✉️</div>
+                                    <h4>Lettre de Motivation</h4>
+                                    <p>Vision et engagement</p>
+                                    <button className="download-btn" onClick={() => downloadPersonalDoc(data.pdf_lettre, 'Lettre_Motivation_Enrico_La_Noce.pdf')}>
+                                        Télécharger
+                                    </button>
+                                </div>
+                                
+                                {parseExtraDocs().map((doc, index) => (
+                                    <div key={index} className="doc-card">
+                                        <div className="doc-icon">{doc.icon}</div>
+                                        <h4>{doc.title}</h4>
+                                        <p>{doc.description}</p>
+                                        <button className="download-btn" onClick={() => window.open(doc.url, '_blank')}>
+                                            Télécharger
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="contact">
+                        <div className="container">
+                            <div className="section-header">
+                                <div className="section-label">06 — CONTACT</div>
+                                <h2 className="section-title">Restons en contact</h2>
+                                <p className="section-subtitle">
+                                    Pour devenir partenaire, investir ou simplement échanger
+                                </p>
+                            </div>
+                            
+                            <div className="contact-grid">
+                                <div className="contact-card">
+                                    <div className="contact-icon">📧</div>
+                                    <div><a href="mailto:lanoce.enrico@gmail.com">lanoce.enrico@gmail.com</a></div>
+                                </div>
+                                <div className="contact-card">
+                                    <div className="contact-icon">📱</div>
+                                    <div><a href="tel:+41786583760">+41 78 658 37 60</a></div>
+                                </div>
+                                <div className="contact-card">
+                                    <div className="contact-icon">📍</div>
+                                    <div style={{color: 'var(--text-dim)'}}>Genève, Suisse</div>
+                                </div>
+                            </div>
+
+                            <div style={{textAlign: 'center'}}>
+                                <button className="vcard-btn" onClick={downloadVCard}>
+                                    Enregistrer le contact
+                                </button>
+                            </div>
+
+                            <ContactForm />
+                        </div>
+                    </section>
+
+                    {/* Photo Modal */}
+                    <div className={`modal ${modalOpen ? 'active' : ''}`} onClick={() => setModalOpen(false)}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                            <button className="modal-close" onClick={() => setModalOpen(false)}>
+                                ×
+                            </button>
+                            {allPhotos.length > 1 && (
+                                <>
+                                    <button className="modal-nav prev" onClick={prevPhoto}>
+                                        ←
+                                    </button>
+                                    <button className="modal-nav next" onClick={nextPhoto}>
+                                        →
+                                    </button>
+                                </>
+                            )}
+                            <img src={currentPhoto} alt="Photo" className="modal-image" />
+                        </div>
+                    </div>
+                </>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
